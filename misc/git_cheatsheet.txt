@@ -1,0 +1,80 @@
+<< GENERAL NOTES >>
+
+The workflow for Git collaborations typically follows this order:
+1. Fetch and merge (or pull) changes from the remote
+2. Create a branch to work on a new project feature
+3. Develop the feature on your branch and commit your work
+4. Fetch and merge from the remote again (in case new commits were made while you were working)
+5. Push your branch up to the remote for review
+
+-------------------------------------------------------------------------------------------------------------------------------------------
+
+<< GIT BASICS >> 
+
+Git is the industry-standard version control system for web developers
+Use Git commands to help keep track of changes made to a project:
+
+git init: 			creates a new Git repository
+git --bare init:		Create new bare git repo
+git status: 			inspects the contents of the working directory and staging area
+git add <filename>: 		adds files from the working directory to the staging area
+git diff: 			shows the difference between the working directory and the staging area
+git commit [-m <"msg">]: 	permanently stores file changes from the staging area in the repository
+git log: 			shows a list of all previous commits
+git log -3:			show the 3 most recent commits
+
+-------------------------------------------------------------------------------------------------------------------------------------------
+
+<< GIT BACKTRACKING >> 
+
+git commit --amend -m <"msg">: 	Edit/Redo previous commit	
+git checkout HEAD filename: 	Discards changes in the working directory.
+git reset HEAD filename: 	Unstages file changes in the staging area.
+git reset:			Remove everything from staging area (unstage)
+git revert <SHA key>:		Create new commit at HEAD, which will undo the commit at <SHA key>. It will revert a commit, not revert TO a commit.
+git revert HEAD			Create a new commit, undoing the last commit.
+git revert HEAD~2		Create a new commit, undoing the last 2 commits.
+git revert <first-bad commit..last-bad-commit>		Create a new commit, reverting a range of commits
+				**!always use revert when undoing a previous commit
+				**!this is keep a record of bad commits, where as 
+				**!reset will not
+git cherry-pick <SHA key>	Create a new commit, re-applying the commit at <SHA key>
+
+-------------------------------------------------------------------------------------------------------------------------------------------
+
+<< GIT BRANCHING >>
+
+Git branching allows users to experiment with different versions of a project by checking out separate branches to work on.
+The following commands are useful in the Git branch workflow.
+
+git branch:			Lists all a Git project’s branches.
+git branch -r: 			Lists a Git project's remote branches
+git branch branch_name: 	Creates a new branch.
+git checkout branch_name: 	Used to switch from one branch to another.
+git merge branch_name: 		Used to join file changes from one branch to another.
+git branch -d branch_name: 	Deletes the branch specified.
+
+-------------------------------------------------------------------------------------------------------------------------------------------
+
+<< GIT REMOTES >>
+
+A remote is a Git repository that lives outside your Git project folder. Remotes can live on the web, on a shared network or even in a separate folder on your local computer.
+The Git Collaborative Workflow are steps that enable smooth project development when multiple collaborators are working on the same Git project.
+
+git clone <Remote Location> <Clone Name>: 	Creates a local copy of a remote.
+git remote -v: 					Lists a Git project’s remotes.
+git remote add origin <remote_location>:	assign origin alias to remote location
+git fetch: 					Fetches work from the remote into the local copy.
+git pull <remote_name> <branch_name>:		fetch and merge from remote location
+git merge origin/master: 			Merges origin/master into your local branch.
+git push origin <branch_name>: 			Pushes a local branch to the origin remote.
+
+-------------------------------------------------------------------------------------------------------------------------------------------
+
+<<Aggregate last n number commits to into one commit>>
+
+1. git rebase -i HEAD~5
+2. git reset --soft HEAD~5
+3. git add .
+4. git commit -m "Update"
+5. git push -f origin master

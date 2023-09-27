@@ -1,0 +1,26 @@
+v3.4.3:
+- 
+
+v3.4.2:
+- Updated laspy version from < 2.0 to > 2.0
+    - laspy==2.1.2
+- Changed decompression backend to lazrs
+    - lazrs==0.4.3
+- Updated output to produce single PDF rather than single PDF and individual component PDFs.
+
+v3.4.1:
+- Chi-Square test redone. Uses all residuals with outliers removed as input.
+- Chi-Square results (Chi-Square sum, Degrees of Freedom, Max, Min, Range, 
+PValue, Alpha Value Checks(1%,5%,10%,20%)) displayed on Report PDFs and a table
+of all results as a standalone PDF and in the full report.
+- Horizontal Threshold default value changed from 12cm to 35cm.
+- Removed "[BETA] Horizontal Error Approximation" output.
+
+v3.4.0:
+- Added queue system from LiQCS and ORiQCS.
+- Updated help popup to include queue functionality.
+- Added Chi-Square test for both flat and sloped swaths, PValue 
+added to LiCal report pdfs and lical_results.csv.
+- Added "Tiled Lidar" Button, which takes in a directory of Tiled Lidar
+files. When the queue is processed the tiled lidar is decomposed into swaths.
+ 

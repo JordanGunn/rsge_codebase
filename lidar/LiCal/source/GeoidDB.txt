@@ -1,0 +1,2 @@
+====== Last file in the list is the active Geoid in use
+C:/CODE_DEVELOPMENT/_QC_repo_local_NJ_DD050861/LiDAR/LiGeoid/test_files/CGG2013n83a/CGG2013an83.byn

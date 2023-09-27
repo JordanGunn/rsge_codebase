@@ -1,0 +1,2 @@
+====== Last file in the list is the active Geoid in use
+C:/Python_DEVELOPER/LiGeoidApp/CGG2013.byn
