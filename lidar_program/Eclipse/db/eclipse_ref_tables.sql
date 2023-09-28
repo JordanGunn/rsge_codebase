@@ -12,27 +12,26 @@ INSERT INTO SpatialReference (epsg_code, sr_name, description) VALUES
 
 -- Populate the UTMZone table
 INSERT INTO UTMZone (zone_number, spatial_ref_id) VALUES
-  (7, 4), -- 1
-  (8, 5),
-  (9, 6),
-  (10, 7),
-  (11, 8); -- 5
+  (7, 3154), -- 1
+  (8, 3155),
+  (9, 3156),
+  (10, 3157),
+  (11, 2955); -- 5
 
 -- Populate the Epoch table
 INSERT INTO Epoch (epoch_year, description, spatial_ref_id) VALUES
-  (2002, 'BC Lower Mainland / UTM Zone 7', 4),
-  (2002, 'BC Lower Mainland / UTM Zone 8', 5),
-  (2002, 'BC Lower Mainland / UTM Zone 9', 6),
-  (2002, 'BC Lower Mainland / UTM Zone 10', 7),
-  (1997, 'BC Vancouver Island / UTM Zone 9', 6),
-  (1997, 'BC Vancouver Island / UTM Zone 10', 7),
-  (2002, 'BC Lower Mainland / UTM Zone 11', 8);
+  (2002, 'BC Lower Mainland / UTM Zone 7', 3154),
+  (2002, 'BC Lower Mainland / UTM Zone 8', 3155),
+  (2002, 'BC Lower Mainland / UTM Zone 9', 3156),
+  (2002, 'BC Lower Mainland / UTM Zone 10', 3157),
+  (1997, 'BC Vancouver Island / UTM Zone 9', 3156),
+  (1997, 'BC Vancouver Island / UTM Zone 10', 3157),
+  (2002, 'BC Lower Mainland / UTM Zone 11', 2955);
 
 -- Populate the NASbox table for demonstration (Optional)
 INSERT INTO NASbox (name, location, IPv4_addr) VALUES
-  ('NAS1', 'Koraley Cubicle', '127.0.0.1'),
-  ('NAS2', 'Scanning Room (Basement)', '127.0.0.1');
-
+  ('Vader', 'Koraley\'s Cubicle', '142.36.252.188'),
+  ('Revan', 'Scanning Room (Basement)', '127.0.0.1');
 
 -- Populate the ProcessingStatusReference table
 INSERT INTO ProcessingStatusReference (status, description) VALUES
