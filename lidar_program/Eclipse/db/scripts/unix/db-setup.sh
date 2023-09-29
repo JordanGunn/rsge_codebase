@@ -1,48 +1,39 @@
 #!/usr/bin/bash
 
-# load configuration params
-source db-config
-
-# Variable pre-declarations
-export FLIST_20K;
-export FLIST_2500K;
-
-# Environment Variables
-
-# Params (Change as needed)
-EPSG_ALBERS_CSRS=3153
-DATA_DIR="${HOME}/work/geobc/vector_data"  # --> CHANGE TO DATA LOCATION
-
-# Relative paths to SQL scripts
-SCRIPT_SCHEMA="../eclipse_schema.sql"
-SCRIPT_REF_TABLE="../eclipse_ref_tables.sql"
-SCRIPT_POST_INERTION="../eclipse_post_insertion.sql"
-
-# Relative paths to data (Change as needed)
-BCGS_ROOT_20K="${DATA_DIR}/BCGS_20K"
-BCGS_ROOT_2500K="${DATA_DIR}/BCGS_2500K"
-BCGS_SHP_20K="${BCGS_ROOT_20K}/BCGS_20K_GRID/20K_GRID_polygon.shp"
-BCGS_SHP_2500K="${BCGS_ROOT_2500K}/BCGS_2500_GRID/BCGS2500GR_polygon.shp"
-# BCGS_TILES_20K="${BCGS_ROOT_20K}/tiles"
-# BCGS_TILES_2500K="${BCGS_ROOT_2500K}/tiles"
+# load config
+chmod a+x "./db-config" && source "./db-config";
+chmod a+x "./db-env" && source "./db-env";
 
 # DB Table References
 TABLE_BCGS20KGrid="eclipse.BCGS20K"
 TABLE_BCGS2500KGrid="eclipse.BCGS2500K"
 
+# Create the eclipse database
+createdb -h "${HOST_NAME}" -U "${USERNAME}" "${DB_NAME}"
+echo "  Created eclipse database."
+
+# Set the roles and privileges
+psql -h "${HOST_NAME}" -U "${USERNAME}" -d "${DB_NAME}" -f "${SCRIPT_ROLES}"
+echo "  Roles and privileges set."
 
 # Create the database and tables
 psql -h "${HOST_NAME}" -d "${DB_NAME}" -U "${USERNAME}" -f "${SCRIPT_SCHEMA}"
+echo "  Database creation and table generation complete."
 
 # Populate the static reference tables
 psql -h "${HOST_NAME}" -d "${DB_NAME}" -U "${USERNAME}" -f "${SCRIPT_REF_TABLE}"
+echo "  Initial reference tables generated."
 
 # Read and insert BCGS 2500K and 20K tile geometry into reference tables
-shp2pgsql -s "${EPSG_ALBERS_CSRS}" -c -m "./col-map-20K" -W "latin1" "${BCGS_SHP_20K}" "${TABLE_BCGS20KGrid}" | psql -h "${HOST_NAME}" -d "${DB_NAME}" -U "${USERNAME}"
-shp2pgsql -s "${EPSG_ALBERS_CSRS}" -c -m "./col-map-2500K" -W "latin1" "${BCGS_SHP_2500K}" "${TABLE_BCGS2500KGrid}" | psql -h "${HOST_NAME}" -d "${DB_NAME}" -U "${USERNAME}"
+echo "Creating BCGS reference tables ..."
+shp2pgsql -s "${EPSG_ALBERS_CSRS}" -c -m "${COLUMN_MAP_20K}" -W "latin1" "${BCGS_SHP_20K}" "${TABLE_BCGS20KGrid}" | psql -h "${HOST_NAME}" -d "${DB_NAME}" -U "${USERNAME}"
+echo "  BCGS20K reference table done."
+shp2pgsql -s "${EPSG_ALBERS_CSRS}" -c -m "${COLUMN_MAP_2500K}" -W "latin1" "${BCGS_SHP_2500K}" "${TABLE_BCGS2500KGrid}" | psql -h "${HOST_NAME}" -d "${DB_NAME}" -U "${USERNAME}"
+echo "  BCGS2500K reference table done."
 
 # Run post insertion
 psql -h "${HOST_NAME}" -d "${DB_NAME}" -U "${USERNAME}" -f "${SCRIPT_POST_INERTION}"
+echo "================ Complete! ================"
 
 
 

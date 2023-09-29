@@ -1,0 +1,26 @@
+#!/usr/bin/bash
+
+# Variable pre-declarations
+export FLIST_20K;
+export FLIST_2500K;
+
+# Params (Change as needed)
+export EPSG_ALBERS_CSRS=3153
+export DATA_DIR="${HOME}/work/geobc/vector_data"  # --> CHANGE TO DATA LOCATION
+
+# Relative paths to SQL scripts
+export PATH_SQL_SCRIPTS=".."
+export SCRIPT_ROLES="${PATH_SQL_SCRIPTS}/eclipse_roles.sql"
+export SCRIPT_SCHEMA="${PATH_SQL_SCRIPTS}/eclipse_schema.sql"
+export SCRIPT_REF_TABLE="${PATH_SQL_SCRIPTS}/eclipse_ref_tables.sql"
+export SCRIPT_POST_INERTION="${PATH_SQL_SCRIPTS}/eclipse_post_insertion.sql"
+
+# Relative paths to files containing data
+export COLUMN_MAP_20K="../data/col-map-20K"
+export COLUMN_MAP_2500K="../data/col-map-2500K"
+
+# Relative paths to data (Change as needed)
+export BCGS_ROOT_20K="${DATA_DIR}/BCGS_20K"
+export BCGS_ROOT_2500K="${DATA_DIR}/BCGS_2500K"
+export BCGS_SHP_20K="${BCGS_ROOT_20K}/BCGS_20K_GRID/20K_GRID_polygon.shp"
+export BCGS_SHP_2500K="${BCGS_ROOT_2500K}/BCGS_2500_GRID/BCGS2500GR_polygon.shp"

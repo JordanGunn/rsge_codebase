@@ -36,9 +36,9 @@ CREATE TABLE IF NOT EXISTS UTMZone (
   spatial_ref_id INTEGER REFERENCES SpatialReference(epsg_code)
 );
 
--- Create BCGS20K table with grid_code_20K as primary key
+-- Create BCGS20K table with tile_20K as primary key
 CREATE TABLE IF NOT EXISTS BCGS20K (
-  grid_code_20K CHAR(7) PRIMARY KEY,
+  tile_20K VARCHAR(20) PRIMARY KEY,
   priority BOOLEAN,
   geometry GEOGRAPHY,
   epsg_code INTEGER REFERENCES SpatialReference(epsg_code)
@@ -46,9 +46,9 @@ CREATE TABLE IF NOT EXISTS BCGS20K (
 
 -- Create the BCGS2500K table
 CREATE TABLE IF NOT EXISTS BCGS2500k (,
-  grid_code_2500k CHAR(10) PRIMARY KEY,
+  tile_2500k VARCHAR(20) PRIMARY KEY,
   grid_geometry GEOGRAPHY NOT NULL,
-  grid_code_20K INTEGER REFERENCES BCGS20K(grid_code_20K),
+  tile_20K INTEGER REFERENCES BCGS20K(tile_20K),
   lidar_file_id INTEGER REFERENCES LidarFile(id),
   epsg_code INTEGER REFERENCES SpatialReference(epsg_code)
 );
@@ -78,7 +78,7 @@ CREATE TABLE IF NOT EXISTS LidarFile (
   bounding_box GEOGRAPHY NOT NULL,
   nas_id INTEGER REFERENCES NASBox(id),
   delivery_id INTEGER REFERENCES Delivery(id),
-  grid_code_2500k INTEGER REFERENCES BCGS2500K(grid_code_2500k),
+  tile_2500k INTEGER REFERENCES BCGS2500K(tile_2500k),
 );
 
 -- Create the ProcessingStatus table
