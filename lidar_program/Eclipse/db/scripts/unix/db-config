@@ -4,7 +4,7 @@
 export HOST_NAME="localhost"
 export HOST_IP="127.0.0.1"
 export DB_NAME="eclipse"
-export USERNAME="postgres"
+export USER_NAME="postgres"
 export PASSWORD="postgres"
 export PGPASSWORD=${PASSWORD}  # posgresdb environment variable (do not change).
 

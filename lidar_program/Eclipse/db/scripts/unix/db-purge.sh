@@ -1,10 +1,10 @@
 #!/usr/bin/bash
 
-# load configuration params
-source "./db-config"
+# Load your config and environment variables
+chmod a+x "./db-config" && source "./db-config";
+chmod a+x "./db-env" && source "./db-env";
 
-# Drop the eclipse database
-echo "Dropping the eclipse database..."
-psql -U "${USERNAME}" -c "DROP DATABASE IF EXISTS ${DB_NAME};" || exit 1
+SCRIPT_PURGE="${PATH_SQL_SCRIPTS}/eclipse_purge.sql"
 
-echo "Database ${DB_NAME} has been removed."
+# Run the SQL script
+psql -h "${HOST_NAME}" -U "${USER_NAME}" -d "${DB_NAME}" -a -f "${SCRIPT_PURGE}"
