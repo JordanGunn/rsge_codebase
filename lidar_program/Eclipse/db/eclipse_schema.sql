@@ -56,14 +56,30 @@ CREATE TABLE IF NOT EXISTS UTMZone (
 --  epsg_code INTEGER REFERENCES SpatialReference(epsg_code)
 --);
 
+-- Create the Delivery table
+CREATE TABLE IF NOT EXISTS Delivery (
+  id SERIAL PRIMARY KEY,
+  coverage GEOGRAPHY NOT NULL,
+  timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  nas_id INTEGER REFERENCES NASBox(id)
+);
+
 -- Create the LidarFile table
 CREATE TABLE IF NOT EXISTS LidarFile (
   id SERIAL PRIMARY KEY,
   filename VARCHAR(255) NOT NULL,
   bounding_box GEOGRAPHY NOT NULL,
   nas_id INTEGER REFERENCES NASBox(id),
-  delivery_id INTEGER REFERENCES Delivery(id),
-  tile_2500k INTEGER REFERENCES BCGS2500k(tile_2500k)
+  delivery_id INTEGER REFERENCES Delivery(id)
+);
+
+-- Create the LidarFile table
+CREATE TABLE IF NOT EXISTS DerivedProductFile (
+  id SERIAL PRIMARY KEY,
+  filename VARCHAR(255) NOT NULL,
+  derived_product DERIVED_PRODUCT,
+  bounding_box GEOGRAPHY NOT NULL,
+  nas_id INTEGER REFERENCES NASBox(id)
 );
 
 
@@ -75,14 +91,6 @@ CREATE TABLE IF NOT EXISTS LidarFile (
 --  lidar_file_id INTEGER REFERENCES LidarFile(id),
 --  epsg_code INTEGER REFERENCES SpatialReference(epsg_code)
 --);
-
--- Create the Delivery table
-CREATE TABLE IF NOT EXISTS Delivery (
-  id SERIAL PRIMARY KEY,
-  coverage GEOGRAPHY NOT NULL,
-  timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  nas_id INTEGER REFERENCES NASBox(id)
-);
 
 -- Create the Drive table
 CREATE TABLE IF NOT EXISTS Drive (

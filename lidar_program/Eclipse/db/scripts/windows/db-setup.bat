@@ -1,35 +1,38 @@
 @echo off
-setlocal
+setlocal enabledelayedexpansion
 
-:: Load configuration params
+REM load config
 call ".\db-config.bat"
+call ".\db-env.bat"
 
-:: Environment Variables
-set EPSG_WGS84=4326
-set DATA_DIR=..\data
-set SCRIPT_SCHEMA=db_schema.sql
-set SCRIPT_REF_TABLE=db_ref.sql
-set BCGS_ROOT_20K=%DATA_DIR%\BCGS_20K\tiles
-set BCGS_ROOT_2500K=%DATA_DIR%\BCGS_2500K\tiles
+REM DB Table References
+set NAMESPACE=public
+set TABLE_BCGS20K=%NAMESPACE%.BCGS20k
+set TABLE_BCGS2500K=%NAMESPACE%.BCGS2500k
 
-:: DB Table References
-set TABLE_BCGS20KGrid=eclipse.BCGS20kGrid
-set TABLE_BCGS2500KGrid=eclipse.BCGS2500kGrid
+REM Create the database and tables
+psql -h "%HOST_NAME%" -d "%DB_NAME%" -U "%USER_NAME%" -f "%SCRIPT_SCHEMA%"
+echo   Database creation and table generation complete.
 
-:: Create the database and tables
-psql -h %HOST_NAME% -d %DB_NAME% -U %USERNAME% -f %SCRIPT_SCHEMA%
+REM Populate the static reference tables
+psql -h "%HOST_NAME%" -d "%DB_NAME%" -U "%USER_NAME%" -f "%SCRIPT_REFTABLE%"
+echo   Initial reference tables generated.
 
-:: Populate the static reference tables
-psql -h %HOST_NAME% -d %DB_NAME% -U %USERNAME% -f %SCRIPT_REF_TABLE%
+REM Read and insert BCGS 2500K and 20K tile geometry into reference tables
+echo Creating BCGS reference tables ...
 
-:: Read and insert BCGS 20K tile geometry into reference tables
-for %%F in (%BCGS_ROOT_20K%\*.shp) do (
-    shp2pgsql -s %EPSG_WGS84% "%%F" %TABLE_BCGS20KGrid% | psql -h %HOST_NAME% -d %DB_NAME% -U %USERNAME%
-)
+REM -- BCGS20K Grid insertion
+attrib -r "%BCGS_SHP_DIR_20K%\*.*" /S
+shp2pgsql -c -m "%COLUMN_MAP_20K%" -W "latin1" "%BCGS_SHP_20K%" "%TABLE_BCGS20K%" | psql -h "%HOST_NAME%" -d "%DB_NAME%" -U "%USER_NAME%"
+echo   BCGS20K reference table done.
 
-:: Read and insert BCGS 2500K tile geometry into reference tables
-for %%F in (%BCGS_ROOT_2500K%\*.shp) do (
-    shp2pgsql -s %EPSG_WGS84% "%%F" %TABLE_BCGS2500KGrid% | psql -h %HOST_NAME% -d %DB_NAME% -U %USERNAME%
-)
+REM -- BCGS2500K Grid insertion
+attrib -r "%BCGS_SHP_DIR_2500K%\*.*" /S
+shp2pgsql -c -m "%COLUMN_MAP_2500K%" -W "latin1" "%BCGS_SHP_2500K%" "%TABLE_BCGS2500K%" | psql -h "%HOST_NAME%" -d "%DB_NAME%" -U "%USER_NAME%"
+echo   BCGS2500K reference table done.
+
+REM Run post insertion
+psql -h "%HOST_NAME%" -d "%DB_NAME%" -U "%USER_NAME%" -f "%SCRIPT_INSERTION%"
+echo ================== Complete! ==================
 
 endlocal

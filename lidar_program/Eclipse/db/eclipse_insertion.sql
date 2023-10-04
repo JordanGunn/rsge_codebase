@@ -31,6 +31,19 @@ ALTER TABLE BCGS20k
   DROP COLUMN area_sqm,
   DROP COLUMN feat_len;
 
+-- Add lidar_file_id FK to BCGS2500k table
+ALTER TABLE BCGS2500k
+ADD COLUMN lidar_file_id INTEGER REFERENCES LidarFile(id);
+
+-- Add priority field to BCGS20k and set default to false
+ALTER TABLE BCGS20k
+ADD COLUMN priority BOOLEAN DEFAULT FALSE;
+
+--
+UPDATE BCGS20k
+SET priority = FALSE
+WHERE priority IS NULL;
+
 -- Add any additional columns
 ALTER TABLE BCGS2500k ADD COLUMN tile_20k VARCHAR(20);
 
@@ -43,3 +56,13 @@ WHERE tile_20K IS NULL;
 -- Update foreign key and NOT NULL constraints in 2500k ref table
 ALTER TABLE BCGS2500k ALTER COLUMN tile_20k SET NOT NULL;
 ALTER TABLE BCGS2500k ADD CONSTRAINT fk_tile_20k FOREIGN KEY (tile_20k) REFERENCES BCGS20k(tile_20k);
+
+
+-- Post BCGS tile geometry insertion
+-- -- Add tile_2500k FK to LidarFile table
+ALTER TABLE LidarFile
+ADD COLUMN tile_2500k VARCHAR(20) REFERENCES BCGS2500k(tile_2500k);
+
+-- -- Add tile_20k FK to DerivedProductFile table
+ALTER TABLE DerivedProductFile
+ADD COLUMN tile_20k VARCHAR(20) REFERENCES BCGS20k(tile_20k);

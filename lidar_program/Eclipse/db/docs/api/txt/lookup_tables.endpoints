@@ -1,0 +1,71 @@
+ControlPoint Table
+    GET /api/control-points
+        Retrieve all control point records.
+    GET /api/control-points/:point_id
+        Retrieve a specific control point by its ID.
+    POST /api/control-points
+        Insert a new control point record.
+    PUT /api/control-points/:point_id
+        Update a control point record.
+    DELETE /api/control-points/:point_id
+        Delete a control point record.
+
+Drive Table
+    GET /api/drives
+        Retrieve all drive records.
+    GET /api/drives/:drive_id
+        Retrieve a specific drive by its ID.
+    POST /api/drives
+        Insert a new drive.
+    PUT /api/drives/:drive_id
+        Update a drive.
+    DELETE /api/drives/:drive_id
+        Delete a drive.
+
+Delivery Table
+    GET /api/deliveries
+        Retrieve all delivery records.
+    GET /api/deliveries/:delivery_id
+        Retrieve a specific delivery by its ID.
+    POST /api/deliveries
+        Insert a new delivery.
+    PUT /api/deliveries/:delivery_id
+        Update a delivery.
+    DELETE /api/deliveries/:delivery_id
+        Delete a delivery.
+
+LidarFile Table
+    GET /api/lidar-files
+        Retrieve all LiDAR file records.
+    GET /api/lidar-files/:file_id
+        Retrieve a specific LiDAR file by its ID.
+    POST /api/lidar-files
+        Insert a new LiDAR file.
+    PUT /api/lidar-files/:file_id
+        Update a LiDAR file.
+    DELETE /api/lidar-files/:file_id
+        Delete a LiDAR file.
+
+DerivedProductFile Table
+    GET /api/derived-product-files
+        Retrieve all derived product file records.
+    GET /api/derived-product-files/:product_id
+        Retrieve a specific derived product file by its ID.
+    POST /api/derived-product-files
+        Insert a new derived product file.
+    PUT /api/derived-product-files/:product_id
+        Update a derived product file.
+    DELETE /api/derived-product-files/:product_id
+        Delete a derived product file.
+
+ProcessingStatus Table
+    GET /api/processing-status
+        Retrieve all processing status records.
+    GET /api/processing-status/:status_id
+        Retrieve a specific processing status by its ID.
+    POST /api/processing-status
+        Insert a new processing status.
+    PUT /api/processing-status/:status_id
+        Update a processing status.
+    DELETE /api/processing-status/:status_id
+        Delete a processing status.
