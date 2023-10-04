@@ -1,0 +1,30 @@
+#!/usr/bin/bash
+
+# Variable pre-declarations
+export FLIST_20K;
+export FLIST_2500K;
+
+# Params (Change as needed)
+export DB="eclipse"
+export EPSG_ALBERS_CSRS=3005
+export DIR_SCRIPT_DATA="../data"
+export DIR_VECTOR_DATA="${HOME}/work/geobc/vector_data"  # --> CHANGE TO DATA LOCATION
+
+# Relative paths to SQL scripts
+export PATH_SQL_SCRIPTS="../.."
+export SCRIPT_ROLES="${PATH_SQL_SCRIPTS}/${DB}_roles.sql"
+export SCRIPT_SCHEMA="${PATH_SQL_SCRIPTS}/${DB}_schema.sql"
+export SCRIPT_REFTABLE="${PATH_SQL_SCRIPTS}/${DB}_reftables.sql"
+export SCRIPT_INSERTION="${PATH_SQL_SCRIPTS}/${DB}_insertion.sql"
+
+# Relative paths to files containing data
+export COLUMN_MAP_20K="${DIR_SCRIPT_DATA}/col-map-20K"
+export COLUMN_MAP_2500K="${DIR_SCRIPT_DATA}/col-map-2500K"
+
+# Paths to data (Change as needed)
+export BCGS_ROOT_20K="${DIR_VECTOR_DATA}/BCGS_20K"
+export BCGS_ROOT_2500K="${DIR_VECTOR_DATA}/BCGS_2500K"
+export BCGS_SHP_DIR_20K="${BCGS_ROOT_20K}/BCGS_20K_GRID"
+export BCGS_SHP_DIR_2500K="${BCGS_ROOT_2500K}/BCGS_2500_GRID"
+export BCGS_SHP_20K="${BCGS_SHP_DIR_20K}/20K_GRID_polygon.shp"
+export BCGS_SHP_2500K="${BCGS_SHP_DIR_2500K}/BCGS2500GR_polygon.shp"

@@ -1,111 +1,121 @@
+
 -- Enable PostGIS extension if not already enabled
 CREATE EXTENSION IF NOT EXISTS postgis;
 
--- Type Definitions
-CREATE TYPE DERIVED_PRODUCT AS ENUM ('DEM', 'DSM', 'CHM');
-CREATE TYPE PROCESSING_STATUS AS ENUM ('Raw', 'Adjusted', 'Classified', 'QualityControlled', 'Accepted', 'Rejected');
+
+-- TYPE DEFINITIONS
+-- derived product enum
+DO $$ BEGIN -- Create type if it doesn't alredy exist
+    CREATE TYPE DERIVED_PRODUCT AS ENUM ('DEM', 'DSM', 'CHM');
+EXCEPTION
+    WHEN DUPLICATE_OBJECT THEN NULL;
+END $$;
+-- Processing Status enum
+DO $$ BEGIN -- Create type if it doesn't alredy exist
+    CREATE TYPE PROCESSING_STATUS AS ENUM ('Raw', 'Adjusted', 'Classified', 'QualityControlled', 'Accepted', 'Rejected');
+EXCEPTION
+    WHEN DUPLICATE_OBJECT THEN NULL;
+END $$;
 
 
--- Create the schema for the ECLIPSE project
---
+-- CREATE TABLES
 -- Create the NASbox table
-CREATE TABLE NASbox (
+CREATE TABLE IF NOT EXISTS NASBox (
   id SERIAL PRIMARY KEY,
-  name VARCHAR(255) NOT NULL,
+  name VARCHAR(20) NOT NULL,
   location VARCHAR(255) NOT NULL,
-  IPv4_addr VARCHAR(255) NOT NULL
+  IPv4_addr VARCHAR(15) NOT NULL
 );
 
--- Create the SpatialReference table
-CREATE TABLE SpatialReference (
+-- Create SpatialReference table with epsg_code as primary key
+CREATE TABLE IF NOT EXISTS SpatialReference (
   epsg_code INTEGER PRIMARY KEY,
   sr_name VARCHAR(255) NOT NULL,
-  description VARCHAR(255)
+  description TEXT
 );
 
--- Create the Epoch table
-CREATE TABLE Epoch (
+-- Create Epoch table with epoch_year as primary key
+CREATE TABLE IF NOT EXISTS Epoch (
   id SERIAL PRIMARY KEY,
   epoch_year INTEGER,
-  description VARCHAR(255),
-  spatial_ref_id INTEGER REFERENCES SpatialReference(id)
+  description TEXT,
+  epsg_code INTEGER REFERENCES SpatialReference(epsg_code)
 );
 
--- UTMZone
-CREATE TABLE UTMZone (
-    zone_number INTEGER PRIMARY KEY,
-    spatial_ref_id INTEGER REFERENCES SpatialReference(id)
+-- Create UTMZone table with zone_number as primary key
+CREATE TABLE IF NOT EXISTS UTMZone (
+  zone_number INTEGER PRIMARY KEY,
+  epsg_code INTEGER REFERENCES SpatialReference(epsg_code)
 );
 
--- Create the BCGS20kGrid table
-CREATE TABLE BCGS2500kGrid (,
-  grid_code_2500k VARCHAR(11) PRIMARY KEY,
-  grid_geometry GEOGRAPHY NOT NULL,
-  grid_20k_id INTEGER REFERENCES BCGS20kGrid(id),
-  lidar_file_id INTEGER REFERENCES LidarFile(id),
-  spatial_ref_id INTEGER REFERENCES SpatialReference(id)
-);
-
--- Create the BCGS20kGrid table
-CREATE TABLE BCGS20kGrid (
-  grid_code_20k CHAR(8) PRIMARY KEY,
-  grid_geometry GEOGRAPHY NOT NULL,
-  priority INTEGER
-  spatial_ref_id INTEGER REFERENCES SpatialReference(id)
-);
-
--- Create the Drive table
-CREATE TABLE Drive (
-  id SERIAL PRIMARY KEY,
-  receiver_name VARCHAR(255) NOT NULL,
-  serial_number VARCHAR(255) NOT NULL,
-  nas_id INTEGER REFERENCES NASbox(id)
-  delivery_id INTEGER REFERENCES Delivery(id)
-);
+---- Create BCGS20k table with tile_20k as primary key
+--CREATE TABLE IF NOT EXISTS BCGS20k (
+--  tile_20k VARCHAR(20) PRIMARY KEY,
+--  priority BOOLEAN,
+--  geometry GEOGRAPHY,
+--  epsg_code INTEGER REFERENCES SpatialReference(epsg_code)
+--);
 
 -- Create the Delivery table
-CREATE TABLE Delivery (
+CREATE TABLE IF NOT EXISTS Delivery (
   id SERIAL PRIMARY KEY,
   coverage GEOGRAPHY NOT NULL,
   timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  drive_id INTEGER REFERENCES Drive(id),
-  nas_id INTEGER REFERENCES NASbox(id)
+  nas_id INTEGER REFERENCES NASBox(id)
 );
 
 -- Create the LidarFile table
-CREATE TABLE LidarFile (
+CREATE TABLE IF NOT EXISTS LidarFile (
   id SERIAL PRIMARY KEY,
   filename VARCHAR(255) NOT NULL,
   bounding_box GEOGRAPHY NOT NULL,
-  nas_id INTEGER REFERENCES NASbox(id),
-  delivery_id INTEGER REFERENCES Delivery(id),
-  grid_2500k_id INTEGER REFERENCES BCGS2500kGrid(id),
+  nas_id INTEGER REFERENCES NASBox(id),
+  delivery_id INTEGER REFERENCES Delivery(id)
 );
 
--- Create the DerivedProduct table
-CREATE TABLE DerivedProductFile (
+-- Create the LidarFile table
+CREATE TABLE IF NOT EXISTS DerivedProductFile (
   id SERIAL PRIMARY KEY,
   filename VARCHAR(255) NOT NULL,
-  type DERIVED_PRODUCT,
-  grid20k_id INTEGER REFERENCES BCGS20kGrid(id),
-  nas_id INTEGER REFERENCES NASbox(id)
+  derived_product DERIVED_PRODUCT,
+  bounding_box GEOGRAPHY NOT NULL,
+  nas_id INTEGER REFERENCES NASBox(id)
+);
+
+
+---- Create the BCGS2500k table
+--CREATE TABLE IF NOT EXISTS BCGS2500k (
+--  tile_2500k VARCHAR(20) PRIMARY KEY,
+--  grid_geometry GEOGRAPHY NOT NULL,
+--  tile_20k VARCHAR(20) REFERENCES BCGS20k(tile_20k),
+--  lidar_file_id INTEGER REFERENCES LidarFile(id),
+--  epsg_code INTEGER REFERENCES SpatialReference(epsg_code)
+--);
+
+-- Create the Drive table
+CREATE TABLE IF NOT EXISTS Drive (
+  id SERIAL PRIMARY KEY,
+  receiver_name VARCHAR(255) NOT NULL,
+  serial_number VARCHAR(255) NOT NULL,
+  nas_id INTEGER REFERENCES NASBox(id),
+  delivery_id INTEGER REFERENCES Delivery(id)
 );
 
 -- Create the ProcessingStatus table
-CREATE TABLE ProcessingStatus (
+CREATE TABLE IF NOT EXISTS ProcessingStatus (
   id SERIAL PRIMARY KEY,
   status PROCESSING_STATUS,
   updated_by VARCHAR(255), -- !
   comments VARCHAR(255), -- !
   timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  file_id INTEGER REFERENCES LidarFile(id),
+  lidar_file_id INTEGER REFERENCES LidarFile(id)
 );
 
 -- Create the ControlPoint table
-CREATE TABLE ControlPoint (
+CREATE TABLE IF NOT EXISTS ControlPoint (
   id SERIAL PRIMARY KEY,
   point_name VARCHAR(255),
   point_geometry GEOMETRY,
-  spatial_ref_id INTEGER REFERENCES SpatialReference(id)
-  delivery_id INTEGER REFERENCES Delivery(id)
+  delivery_id INTEGER REFERENCES Delivery(id),
+  epsg_code INTEGER REFERENCES SpatialReference(epsg_code)
 );

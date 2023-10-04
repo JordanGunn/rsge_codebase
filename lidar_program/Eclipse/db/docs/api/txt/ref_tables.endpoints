@@ -1,0 +1,87 @@
+SpatialReference Table
+    GET /api/spatial-reference
+        Retrieve all spatial references.
+    GET /api/spatial-reference/:id
+        Retrieve a specific spatial reference by its ID (epsg_code).
+    POST /api/spatial-reference
+        Insert a new spatial reference (RESTRICTED to superusers/admins).
+    PUT /api/spatial-reference/:id
+        Update a specific spatial reference (RESTRICTED).
+    DELETE /api/spatial-reference/:id
+        Delete a specific spatial reference (RESTRICTED).
+    
+UTMZone Table
+    GET /api/utmzone
+        Retrieve all UTM zones.
+    GET /api/utmzone/:zone_number
+        Retrieve a specific UTM zone by its number.
+    POST /api/utmzone
+        Insert a new UTM zone (RESTRICTED).
+    PUT /api/utmzone/:zone_number
+        Update a UTM zone (RESTRICTED).
+    DELETE /api/utmzone/:zone_number
+        Delete a UTM zone (RESTRICTED).
+    
+Epoch Table
+    GET /api/epoch
+        Retrieve all epochs.
+    GET /api/epoch/:id
+        Retrieve a specific epoch by its ID.
+    POST /api/epoch
+        Insert a new epoch (RESTRICTED).
+    PUT /api/epoch/:id
+        Update an epoch (RESTRICTED).
+    DELETE /api/epoch/:id
+        Delete an epoch (RESTRICTED).
+    
+NASbox Table
+    GET /api/nasbox
+        Retrieve all NASbox records.
+    GET /api/nasbox/:id
+        Retrieve a specific NASbox by its ID.
+    POST /api/nasbox
+        Insert a new NASbox (RESTRICTED).
+    PUT /api/nasbox/:id
+        Update a NASbox (RESTRICTED).
+    DELETE /api/nasbox/:id
+        Delete a NASbox (RESTRICTED).
+    
+ProcessingStatusReference Table
+    GET /api/processing-status
+        Retrieve all processing statuses.
+    POST /api/processing-status
+        Insert a new processing status (RESTRICTED).
+    PUT /api/processing-status/:id
+        Update a processing status (RESTRICTED).
+    DELETE /api/processing-status/:id
+        Delete a processing status (RESTRICTED).
+
+BCGS20k Table
+    GET /api/bcgs20k
+        Retrieve all BCGS20k records.
+    GET /api/bcgs20k/:tile_20k
+        Retrieve a specific BCGS20k by its tile code.
+    POST /api/bcgs20k
+        Insert a new BCGS20k (RESTRICTED).
+    PUT /api/bcgs20k/:tile_20k
+        Update a BCGS20k (RESTRICTED).
+    DELETE /api/bcgs20k/:tile_20k
+        Delete a BCGS20k (RESTRICTED).
+    
+BCGS2500k Table
+    GET /api/bcgs2500k
+        Retrieve all BCGS2500k records.
+    GET /api/bcgs2500k/:tile_2500k
+        Retrieve a specific BCGS2500k by its tile code.
+    POST /api/bcgs2500k
+        Insert a new BCGS2500k (RESTRICTED).
+    PUT /api/bcgs2500k/:tile_2500k
+        Update a BCGS2500k (RESTRICTED).
+    DELETE /api/bcgs2500k/:tile_2500k
+        Delete a BCGS2500k (RESTRICTED).
+
+Note: In this structure, the :id, :zone_number, :tile_20k, and :tile_2500k are placeholders for actual values that
+will be used in the route when making a request.
+
+This is a basic structure and can be extended with more complex filtering, pagination, sorting, or any other
+specific requirements.
