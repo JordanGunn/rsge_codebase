@@ -122,6 +122,10 @@ class LiqcsTests:
     TEST_TEXT_LIST = []
     for i in range(len(TEST_DICT)):
         TEST_TEXT_LIST.append(f'{TEST_DICT[i+1]["Name"]}')
+
+    TEST_DESC_LIST = []
+    for i in range(len(TEST_DICT)):
+        TEST_DESC_LIST.append(f'{TEST_DICT[i+1]["Description"]}')
 # ===============================================================
 # -- valid formats for writing
 # ===============================================================
