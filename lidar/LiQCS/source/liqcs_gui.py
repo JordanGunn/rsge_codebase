@@ -128,7 +128,7 @@ class LiQCS_GUI:
         self.queueDict = {}
         self.queueItemFrames = []
         self.chkbTestText = [f'{i+1}. {LiqcsTests.TEST_TEXT_LIST[i]}' for i in range(len(LiqcsTests.TEST_TEXT_LIST))]
-        self.main_gui()
+        self.populate_gui()
 
     def open_liqcs_gui_on_top_of_other_windows(self):
         """
@@ -162,14 +162,24 @@ class LiQCS_GUI:
             os.remove(icon_path)
 
 
-    def main_gui(self):
+    def populate_gui(self, edit=False, queuePointer=None):
         """
-        Generate GUI.
+        Everything in the GUI minus the queue.
         """
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # topFrame - Makes up the left side of the GUI, contains: input, output, cores, config
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        topFrame = Frame(self.root)
+        if edit == True:
+            popup = Toplevel()
+            self.open_popup_on_top_of_other_windows(popup)
+            popup.resizable(False, False)
+            self.set_icon(popup)
+            popup.grab_set()
+
+            topFrame = Frame(popup)
+        else:
+            topFrame = Frame(self.root)
+        
         topFrame.grid(row=0, column=0, padx=55)
         ioFrame = ttk.LabelFrame(topFrame, text=_io_frame_label())
         ioFrame.grid(row=0, column=0, pady=5, padx=5)
@@ -181,286 +191,10 @@ class LiQCS_GUI:
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         inputFrame = ttk.LabelFrame(ioFrame, text=_input_frame_label())
         inputFrame.grid(row=0, column=0, padx=5)
-        self.inputEntry = StringVar()
-        ttk.Entry(
-            inputFrame,
-            width=40,
-            textvariable=self.inputEntry
-        ).grid(row=0, column=0)
-        ttk.Button(
-            inputFrame,
-            text=_choose_input_directory_button_text(),
-            command=lambda: self.path_select(self.inputEntry)
-        ).grid(row=0, column=1)
-        ttk.Button(
-            inputFrame,
-            text=_file_list_button_text(),
-            command=lambda: self.file_list_select(self.inputEntry)
-        ).grid(row=1, column=1)
-
-        self.recurse = IntVar()
-        recurseEntry = ttk.Checkbutton(
-            inputFrame,
-            text=_search_subdirectories_checkbutton_text(),
-            variable=self.recurse,
-            onvalue=1,
-            offvalue=0
-        )
-        recurseEntry.grid(row=1, column=0)
-
-        percentFrame = Frame(inputFrame)
-        percentFrame.grid(row=2, column=0)
-        ttk.Label(percentFrame, text=_percentage_of_files_label()[0]).grid(row=1, column=0)
-        sampleSize = StringVar(value=100)
-        ttk.Entry(percentFrame, width=3, textvariable=sampleSize).grid(row=1, column=1)
-        ttk.Label(percentFrame, text="%").grid(row=1, column=2)
-
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # outputFrame - Select output directory
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        outputFrame = ttk.LabelFrame(ioFrame, text=_output_frame_label())
-        outputFrame.grid(row=1, column=0, padx=5, pady=5)
-        self.outputEntry = StringVar()
-        ttk.Entry(
-            outputFrame,
-            width=40,
-            textvariable=self.outputEntry
-        ).grid(row=0, column=0)
-        ttk.Button(
-            outputFrame,
-            text=_choose_output_directory_button_text(),
-            command=lambda: self.path_select(self.outputEntry)
-        ).grid(row=0, column=1)
-
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # coreFrame - Select number of processor cores from drop down menu
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        coreFrame = ttk.LabelFrame(
-            topFrame,
-            text=_core_frame_label()
-        )
-        coreFrame.grid(row=2, column=0, pady=(0, 5), sticky=W)
-        ttk.Label(
-            coreFrame,
-            text="Cores:"
-        ).grid(row=0, column=0)
-
-        # Core selection combobox
-        coreSelect = StringVar()
-        coreOptions = ttk.Combobox(
-            coreFrame,
-            textvariable=coreSelect,
-            state="readonly",
-            width=9,
-            height=9
-        )
-
-        coreOptions['values'] = (
-            '1',
-            '2',
-            '3',
-            'Default (4)',
-            '5',
-            '6',
-            '7',
-            '8'
-        )
-
-        coreOptions.current(3)
-        coreOptions.grid(row=0, column=1)
-
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # addToQueueFrame - Contains the "Add to queue" button
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-        addToQueueFrame = Frame(self.root)
-        addToQueueFrame.grid(row=1, column=0, pady=(20, 0), columnspan=3)
-
-        ttk.Button(
-            addToQueueFrame,
-            text="Add to Queue",
-            padding=20,
-            command=lambda: self.add_to_queue(
-                self.inputEntry.get(),
-                self.outputEntry.get(),
-                self.chkbList, coreSelect.get(),
-                sampleSize.get(),
-                self.recurse.get(),
-                None
-            )
-        ).grid(row=3, column=0, pady=5)
-
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # queueActionFrame - Process and clear queue buttons
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        queueActionFrame = Frame(self.root)
-        queueActionFrame.grid(row=3, column=0, pady=5)
-        ttk.Button(
-            queueActionFrame,
-            text=_process_queue_button_text(),
-            command=lambda: self.run_tests(),
-            padding=20
-        ).grid(row=0, column=0)
-        ttk.Button(
-            queueActionFrame,
-            text="Clear queue",
-            command=lambda: self.clear_queue(),
-            padding=20
-        ).grid(row=0, column=1, padx=(10, 0))
-
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # softwareFrame - Information and quit buttons
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        softwareFrame = Frame(self.root)
-        softwareFrame.grid(row=4, column=0, pady=(5, 10))
-        ttk.Button(
-            softwareFrame,
-            text="Help",
-            command=lambda: self.help_page()
-        ).grid(row=0, column=0, padx=10)
-        ttk.Button(
-            softwareFrame,
-            text="About",
-            command=lambda: self.about_page()
-        ).grid(row=0, column=1, padx=10)
-        ttk.Button(
-            softwareFrame,
-            text=_quit_button_text(),
-            command=self.root.destroy
-        ).grid(row=0, column=2, padx=10)
-
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # testFrame - contains all test options
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        testsFrame = ttk.LabelFrame(chooseTestsFrame, text="Tests")
-        testsFrame.grid(row=0, column=0, pady=5, padx=5)
-
-        testCheckboxFrame = Frame(testsFrame)
-        testCheckboxFrame.grid(row=0, column=0)
-
-        self.chkbList = [IntVar() for i in range(len(self.chkbTestText))]
-
-        # Create checkbuttons for tests
-        row_num = 0
-        column_num = 0
-        for x, y, z in zip(self.chkbList, self.chkbTestText, LiqcsTests.TEST_DESC_LIST):
-            chkb = ttk.Checkbutton(testCheckboxFrame, text=y, variable=x)
-            if row_num >= 6:
-                row_num = 0
-                column_num = column_num + 2
-            CreateToolTip(chkb, text=z)
-            chkb.grid(
-                row=row_num,
-                column=column_num,
-                sticky='W'
-            )
-            row_num = row_num + 1
-
-        selectFrame = Frame(testsFrame)
-        selectFrame.grid(row=1, column=0)
-        ttk.Button(
-            selectFrame,
-            text="Select/clear all",
-            command=lambda: self.select_trigger(self.chkbList)
-        ).grid(
-            row=0,
-            column=0,
-            pady=5,
-            sticky='WE'
-        )
-
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # Default Tests - Contains buttons that select tests in chkblist
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        dTestFrame = ttk.LabelFrame(
-            chooseTestsFrame,
-            text="Default tests"
-        )
-        dTestFrame.grid(row=0, column=1, padx=5)
-        default_test_dict = self._default_test_dict()
-        default_test_dict_keys = list(default_test_dict)
-        default_test_buttons_column = 0
-        default_test_button_padx = 5
-        default_test_buttons_pady = 4
-        default_test_buttons_sticky = W
-
-        # Button 0: First set of default tests from _default_test_dict()
-        ttk.Button(
-            dTestFrame,
-            text=self._default_test_button_text(0),  # 0
-            command=lambda: self.default_test_select(
-                self.chkbList,
-                default_test_dict_keys[0]  # 0
-            )
-        ).grid(
-            row=0,  # 0
-            column=default_test_buttons_column,
-            padx=default_test_button_padx,
-            pady=default_test_buttons_pady,
-            sticky=default_test_buttons_sticky
-        )
-
-        # Button 1: Second set of default tests from _default_test_dict()
-        ttk.Button(
-            dTestFrame,
-            text=self._default_test_button_text(1),  # 1
-            command=lambda: self.default_test_select(
-                self.chkbList,
-                default_test_dict_keys[1]  # 1
-            )
-        ).grid(
-            row=1,  # 1
-            column=default_test_buttons_column,
-            padx=default_test_button_padx,
-            pady=default_test_buttons_pady,
-            sticky=default_test_buttons_sticky
-        )
-
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # queueFrame - Contains queue of tests to be run
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-        self.queueFrame = ScrollingFrame(self.root)
-        self.queueFrame.grid(row=2, column=0, pady=5, padx=5, sticky="WE")
-        self.innerQueueFrame = self.queueFrame.frame
-
-        print(
-            f" {liqcs_config.rainbow_string (liqcs_config.dashline())}"
-            f"Add tests to LiQCS queue in the LiQCS GUI."
-        )
-
-    def edit_queue(self, queuePointer):
-        """
-        Pop-up to edit queue item.
-
-        Args:
-            queuePointer (int):
-                - Queue item index (queue position).
-        """
-        popup = Toplevel()
-        self.open_popup_on_top_of_other_windows(popup)
-        popup.resizable(False, False)
-        self.set_icon(popup)
-        popup.grab_set()
-
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # topFrame - Makes up the left side of the GUI, contains: input, output, cores, config
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        topFrame = Frame(popup)
-        topFrame.grid(row=0, column=0, padx=55)
-        ioFrame = ttk.LabelFrame(topFrame, text=_io_frame_label())
-        ioFrame.grid(row=0, column=0, pady=5, padx=5)
-        chooseTestsFrame = ttk.LabelFrame(topFrame, text=_choose_tests_frame_label())
-        chooseTestsFrame.grid(row=0, column=1, pady=5, padx=5)
-
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # inputFrame - Select input directory
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        inputFrame = ttk.LabelFrame(ioFrame, text=_input_frame_label())
-        inputFrame.grid(row=0, column=0, padx=5)
+        
         inputEntry = StringVar()
-        inputEntry.set(self.queueDict[queuePointer]['inputPath'])
-
+        if edit == True:
+           inputEntry.set(self.queueDict[queuePointer]['inputPath']) 
         ttk.Entry(
             inputFrame,
             width=40,
@@ -477,22 +211,26 @@ class LiQCS_GUI:
             command=lambda: self.file_list_select(inputEntry)
         ).grid(row=1, column=1)
 
-        recurse = IntVar()
-        recurse.set(self.queueDict[queuePointer]['recurse'])
-        recurseEntry = ttk.Checkbutton(
+        recurseEntry = IntVar()
+        if edit == True:
+            recurseEntry.set(self.queueDict[queuePointer]['recurse'])
+        
+        ttk.Checkbutton(
             inputFrame,
             text=_search_subdirectories_checkbutton_text(),
-            variable=recurse,
+            variable=recurseEntry,
             onvalue=1,
             offvalue=0
-        )
-        recurseEntry.grid(row=1, column=0)
+        ).grid(row=1, column=0)
 
         percentFrame = Frame(inputFrame)
         percentFrame.grid(row=2, column=0)
         ttk.Label(percentFrame, text=_percentage_of_files_label()[0]).grid(row=1, column=0)
         sampleSize = StringVar()
-        sampleSize.set(int(100 * (self.queueDict[queuePointer]['sampleSize'])))
+        if edit == True:
+            sampleSize.set(int(100 * (self.queueDict[queuePointer]['sampleSize'])))
+        else:
+            sampleSize.set(100)
         ttk.Entry(percentFrame, width=3, textvariable=sampleSize).grid(row=1, column=1)
         ttk.Label(percentFrame, text="%").grid(row=1, column=2)
 
@@ -502,7 +240,8 @@ class LiQCS_GUI:
         outputFrame = ttk.LabelFrame(ioFrame, text=_output_frame_label())
         outputFrame.grid(row=1, column=0, padx=5, pady=5)
         outputEntry = StringVar()
-        outputEntry.set(self.queueDict[queuePointer]['outputPath'])
+        if edit == True:
+            outputEntry.set(self.queueDict[queuePointer]['outputPath'])
         ttk.Entry(
             outputFrame,
             width=40,
@@ -547,9 +286,12 @@ class LiQCS_GUI:
             '7',
             '8'
         )
-
-        coreOptions.current(self.queueDict[queuePointer]['cores'] - 1)
+        if edit == True:
+            coreOptions.current(self.queueDict[queuePointer]['cores'] - 1)
+        else:
+            coreOptions.current(3)
         coreOptions.grid(row=0, column=1)
+
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # testFrame - contains all test options
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -560,11 +302,11 @@ class LiQCS_GUI:
         testCheckboxFrame.grid(row=0, column=0)
 
         chkbList = [IntVar() for i in range(len(self.chkbTestText))]
-
-        selectedTests = self.queueDict[queuePointer]['tests']
-        for i in range(len(chkbList)):
-            if i + 1 in selectedTests:
-                chkbList[i].set(1)
+        if edit == True:
+            selectedTests = self.queueDict[queuePointer]['tests']
+            for i in range(len(chkbList)):
+                if i + 1 in selectedTests:
+                    chkbList[i].set(1)
 
         # Create checkbuttons for tests
         row_num = 0
@@ -641,52 +383,129 @@ class LiQCS_GUI:
             pady=default_test_buttons_pady,
             sticky=default_test_buttons_sticky
         )
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # Bottom of window - edit: update, discard, delete and main: queue, queue options 
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        if edit == True:
+            buttonClicked = IntVar()
+            saveClicked = IntVar(value=0)
+            doneClicked = IntVar()
+            buttonFrame = Frame(popup)
+            buttonFrame.grid(row=1, column=0, pady=(0, 5))
 
-        buttonClicked = IntVar()
-        saveClicked = IntVar(value=0)
-        doneClicked = IntVar()
-        buttonFrame = Frame(popup)
-        buttonFrame.grid(row=1, column=0, pady=(0, 5))
+            ttk.Button(
+                buttonFrame,
+                text="Update queue item",
+                padding=10,
+                command=lambda: [buttonClicked.set(1), saveClicked.set(value=1)]
+            ).grid(row=0, column=0)
+            ttk.Button(
+                buttonFrame,
+                text="Discard changes",
+                padding=10,
+                command=lambda: [buttonClicked.set(1), doneClicked.set(1)]
+            ).grid(row=0, column=1, padx=5)
+            ttk.Button(
+                buttonFrame,
+                text="Delete queue item",
+                padding=10,
+                command=lambda: [
+                    self.delete_queue(queuePointer),
+                    buttonClicked.set(1),
+                    doneClicked.set(1)
+                ]
+            ).grid(row=0, column=2)
 
-        ttk.Button(
-            buttonFrame,
-            text="Update queue item",
-            padding=10,
-            command=lambda: [buttonClicked.set(1), saveClicked.set(value=1)]
-        ).grid(row=0, column=0)
-        ttk.Button(
-            buttonFrame,
-            text="Discard changes",
-            padding=10,
-            command=lambda: [buttonClicked.set(1), doneClicked.set(1)]
-        ).grid(row=0, column=1, padx=5)
-        ttk.Button(
-            buttonFrame,
-            text="Delete queue item",
-            padding=10,
-            command=lambda: [
-                self.delete_queue(queuePointer),
-                buttonClicked.set(1),
-                doneClicked.set(1)
-            ]
-        ).grid(row=0, column=2)
+            popup.wait_variable(buttonClicked)
 
-        popup.wait_variable(buttonClicked)
+            if saveClicked.get() == 1:
+                self.add_to_queue(
+                    inputEntry,
+                    outputEntry,
+                    chkbList,
+                    coreSelect.get(),
+                    sampleSize.get(),
+                    recurseEntry,
+                    queuePointer
+                )
+                popup.destroy()
 
-        if saveClicked.get() == 1:
-            self.add_to_queue(
-                inputEntry.get(),
-                outputEntry.get(),
-                chkbList,
-                coreSelect.get(),
-                sampleSize.get(),
-                recurse.get(),
-                queuePointer
-            )
+            popup.wait_variable(doneClicked)
             popup.destroy()
+        else:
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # addToQueueFrame - Contains the "Add to queue" button
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-        popup.wait_variable(doneClicked)
-        popup.destroy()
+            addToQueueFrame = Frame(self.root)
+            addToQueueFrame.grid(row=1, column=0, pady=(20, 0), columnspan=3)
+
+            ttk.Button(
+                addToQueueFrame,
+                text="Add to Queue",
+                padding=20,
+                command=lambda: self.add_to_queue(
+                    inputEntry,
+                    outputEntry,
+                    chkbList, 
+                    coreSelect.get(),
+                    sampleSize.get(),
+                    recurseEntry,
+                    None
+                )
+            ).grid(row=3, column=0, pady=5)
+
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # queueActionFrame - Process and clear queue buttons
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            queueActionFrame = Frame(self.root)
+            queueActionFrame.grid(row=3, column=0, pady=5)
+            ttk.Button(
+                queueActionFrame,
+                text=_process_queue_button_text(),
+                command=lambda: self.run_tests(),
+                padding=20
+            ).grid(row=0, column=0)
+            ttk.Button(
+                queueActionFrame,
+                text="Clear queue",
+                command=lambda: self.clear_queue(),
+                padding=20
+            ).grid(row=0, column=1, padx=(10, 0))
+
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # queueFrame - Contains queue of tests to be run
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+            self.queueFrame = ScrollingFrame(self.root)
+            self.queueFrame.grid(row=2, column=0, pady=5, padx=5, sticky="WE")
+            self.innerQueueFrame = self.queueFrame.frame
+
+            print(
+                f" {liqcs_config.rainbow_string (liqcs_config.dashline())}"
+                f"Add tests to LiQCS queue in the LiQCS GUI."
+            )
+
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            # softwareFrame - Information and quit buttons
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            softwareFrame = Frame(self.root)
+            softwareFrame.grid(row=4, column=0, pady=(5, 10))
+            ttk.Button(
+                softwareFrame,
+                text="Help",
+                command=lambda: self.help_page()
+            ).grid(row=0, column=0, padx=10)
+            ttk.Button(
+                softwareFrame,
+                text="About",
+                command=lambda: self.about_page()
+            ).grid(row=0, column=1, padx=10)
+            ttk.Button(
+                softwareFrame,
+                text=_quit_button_text(),
+                command=self.root.destroy
+            ).grid(row=0, column=2, padx=10)
 
     def select_trigger(self, chkbList):
         """
@@ -879,18 +698,21 @@ class LiQCS_GUI:
 
     def add_to_queue(
         self,
-        inputPath,
-        outputPath,
+        inputEntry,
+        outputEntry,
         chkbList,
         cores,
         sampleSize,
-        recurse,
+        recurseEntry,
         queuePointer=None
     ):
         """
         Takes in a list of tests, input and output paths, other info, and creates queue object.
         Gathers requirements for selected tests.
         """
+        inputPath = inputEntry.get()
+        outputPath = outputEntry.get()
+        recurse = recurseEntry.get()
         try:
             inputPath, outputPath, testList, infileGlob, sampleSize, isSingleFile, isFileList, cores = self.validate_input(
                 inputPath,
@@ -1106,11 +928,12 @@ class LiQCS_GUI:
         self.queueDict[queuePointer]['densityAnalysisDict'] = self.densityAnalysisDict
         
 
-        for x in self.chkbList:
+        for x in chkbList:
             x.set(0)
-        self.inputEntry.set('')
-        self.outputEntry.set('')
-        self.recurse.set(0)
+        
+        inputEntry.set('')
+        outputEntry.set('')
+        recurseEntry.set(0)
 
         self.update_queue()
 
@@ -1263,7 +1086,7 @@ class LiQCS_GUI:
             testStr = self.get_test_list_str(self.queueDict[i]['tests'])
             cores_str = f"Cores: {self.queueDict[i]['cores']}"
             percentage_to_test_str = (
-                f"Files to test:\n{int(self.queueDict[i]['sampleSize'])}%"
+                f"Files to test:\n{int(self.queueDict[i]['sampleSize']*100)}%"
             )
 
             self.queueItemFrames.append(
@@ -1288,7 +1111,7 @@ class LiQCS_GUI:
             # Input string
             ttk.Label(
                 self.queueItemFrames[i], 
-                width=116, 
+                width=150, 
                 wraplength=io_string_wraplength,
                 text=inputStr
             ).grid(row=0, column=0, sticky=N)
@@ -1296,7 +1119,7 @@ class LiQCS_GUI:
             # Output string
             ttk.Label(
                 self.queueItemFrames[i], 
-                width=116,
+                width=150,
                 wraplength=io_string_wraplength,
                 text=outputStr
             ).grid(row=1, column=0, pady=4, sticky=N)
@@ -1325,7 +1148,7 @@ class LiQCS_GUI:
             ttk.Button(
                 self.queueItemFrames[i],
                 text="Edit",
-                command=lambda i=i: self.edit_queue(i)
+                command=lambda i=i: self.populate_gui(True, i)
             ).grid(row=0, column=3)
 
             # Button: delete queue item
