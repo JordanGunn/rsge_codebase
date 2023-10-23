@@ -5,11 +5,11 @@ from django.contrib.gis.db import models
 
 
 class NASbox(models.Model):
+    nas_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255)
-    ip_address = models.GenericIPAddressField()
+    ipv4_addr = models.GenericIPAddressField()
     capacity = models.IntegerField()
-    location = models.PointField(geography=True, srid=4326)
 
     def __str__(self):
-        return self.name
+        return f"{self.name}: {self.ipv4_addr}"
 

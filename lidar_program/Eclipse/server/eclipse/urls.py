@@ -14,12 +14,13 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from . import NASbox.views
-
+from NASbox.views import NASboxViewSet
+from Drive.views import DriveViewSet
 router = DefaultRouter()
-router.register(r'nasboxes', .NASboxViewSet)
+router.register(r'nasboxes', NASboxViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),

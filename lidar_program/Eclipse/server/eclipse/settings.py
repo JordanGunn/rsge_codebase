@@ -39,7 +39,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.gis',
     'rest_framework',
-    'delivery',
+    'rest_framework_gis',
+    'NASbox',
+    'Delivery',
+    'Drive'
 ]
 
 MIDDLEWARE = [
