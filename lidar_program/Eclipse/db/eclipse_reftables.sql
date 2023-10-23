@@ -7,7 +7,7 @@ INSERT INTO SpatialReference (epsg_code, sr_name, description) VALUES
   (3154, 'NAD83(CSRS) / UTM zone 7N', 'North American Datum 1983, Canadian Spatial Reference System, UTM Zone 7 North'),
   (3155, 'NAD83(CSRS) / UTM zone 8N', 'North American Datum 1983, Canadian Spatial Reference System, UTM Zone 8 North'),
   (3156, 'NAD83(CSRS) / UTM zone 9N', 'North American Datum 1983, Canadian Spatial Reference System, UTM Zone 9 North'),
-  (3157, 'NAD83(CSRS) / UTM zone 10N', 'North American Datum 1983, Canadian Spatial Reference System, UTM Zone 10 North'),
+  (3157, 'NAD83(CSRS) / UTM zone 10N', 'North American Datum 1983, Can`adian Spatial Reference System, UTM Zone 10 North'),
   (2955, 'NAD83(CSRS) / UTM zone 11N', 'North American Datum 1983, Canadian Spatial Reference System, UTM Zone 11 North')
 ON CONFLICT (epsg_code) DO NOTHING;
 --
