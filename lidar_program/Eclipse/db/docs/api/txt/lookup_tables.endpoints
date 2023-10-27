@@ -15,6 +15,14 @@ Drive Table
         Retrieve all drive records.
     GET /api/drives/:drive_id
         Retrieve a specific drive by its ID.
+    GET /api/drives/:
+        Retrieve a specific drive by its ID.
+    GET /api/drives?startYear=:startYear&endYear=:endYear
+        Fetches drives that have a date_received between the given start and end years.
+    GET /api/drives?startDate=:startDate&endDate=:endDate
+        Fetches drives that have a date_received between the given start and end dates (date format=YYYY-MM-DD).
+    GET /api/drives?receiverName=:receiverName
+        Fetches drives associated with a particular "receiver_name".
     POST /api/drives
         Insert a new drive.
     PUT /api/drives/:drive_id
