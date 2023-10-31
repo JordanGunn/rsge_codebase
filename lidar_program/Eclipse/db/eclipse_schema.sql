@@ -84,7 +84,7 @@ CREATE TABLE IF NOT EXISTS Lidar (
 -- -- tile_2500k reference added in 'eclipse_insertion.sql' script
 CREATE TABLE IF NOT EXISTS LidarClassified (
   id SERIAL PRIMARY KEY REFERENCES Lidar(id),
-  bounding_box POLYGON,
+  bounding_box POLYGON
 );
 
 -- Create the LidarClassified table
@@ -92,7 +92,7 @@ CREATE TABLE IF NOT EXISTS LidarClassified (
 CREATE TABLE IF NOT EXISTS LidarRaw (
   id SERIAL PRIMARY KEY REFERENCES Lidar(id),
   convex_hull POLYGON,
-  file_source_id INTEGER,
+  file_source_id INTEGER
 );
 
 -- Create the LidarFile table

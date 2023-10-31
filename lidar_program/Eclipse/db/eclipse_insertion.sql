@@ -33,7 +33,7 @@ ALTER TABLE BCGS20k
 
 -- Add lidar_file_id FK to BCGS2500k table
 ALTER TABLE BCGS2500k
-ADD COLUMN lidar_id INTEGER REFERENCES Lidar(id);
+ADD COLUMN lidar_id INTEGER REFERENCES LidarClassified(id);
 
 -- Add priority field to BCGS20k and set default to false
 ALTER TABLE BCGS20k
