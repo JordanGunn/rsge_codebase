@@ -33,7 +33,7 @@ ALTER TABLE BCGS20k
 
 -- Add lidar_file_id FK to BCGS2500k table
 ALTER TABLE BCGS2500k
-ADD COLUMN lidar_file_id INTEGER REFERENCES LidarFile(id);
+ADD COLUMN lidar_id INTEGER REFERENCES LidarClassified(id);
 
 -- Add priority field to BCGS20k and set default to false
 ALTER TABLE BCGS20k
@@ -60,9 +60,9 @@ ALTER TABLE BCGS2500k ADD CONSTRAINT fk_tile_20k FOREIGN KEY (tile_20k) REFERENC
 
 -- Post BCGS tile geometry insertion
 -- -- Add tile_2500k FK to LidarFile table
-ALTER TABLE LidarFile
+ALTER TABLE LidarClassified
 ADD COLUMN tile_2500k VARCHAR(20) REFERENCES BCGS2500k(tile_2500k);
 
 -- -- Add tile_20k FK to DerivedProductFile table
-ALTER TABLE DerivedProductFile
+ALTER TABLE DerivedProduct
 ADD COLUMN tile_20k VARCHAR(20) REFERENCES BCGS20k(tile_20k);
