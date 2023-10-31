@@ -30,7 +30,6 @@ CREATE TABLE IF NOT EXISTS NASBox (
   id SERIAL PRIMARY KEY,
   name VARCHAR(20) NOT NULL,
   location VARCHAR(255) NOT NULL,
-  capacity_gb int NOT NULL,
   IPv4_addr VARCHAR(15) NOT NULL
 );
 
@@ -73,7 +72,8 @@ CREATE TABLE IF NOT EXISTS Lidar (
   x_max NUMERIC(10, 3),
   y_min NUMERIC(10, 3),
   y_max NUMERIC(10, 3),
-  epsg_code INT,
+  point_record_format INTEGER,
+  epsg_code INTEGER,
   version REAL,
   lidar_type CHAR,
   nas_id INTEGER REFERENCES NASBox(id),
@@ -129,14 +129,14 @@ CREATE TABLE IF NOT EXISTS ProcessingStatus (
   updated_by VARCHAR(255), -- !
   comments VARCHAR(255), -- !
   timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  lidar_file_id INTEGER REFERENCES LidarFile(id)
+  lidar_id INTEGER REFERENCES Lidar(id)
 );
 
 -- Create the ControlPoint table
 CREATE TABLE IF NOT EXISTS ControlPoint (
   id SERIAL PRIMARY KEY,
   point_name VARCHAR(255),
-  point_geometry GEOMETRY,
+  point_geometry POINT,
   delivery_id INTEGER REFERENCES Delivery(id),
   epsg_code INTEGER REFERENCES SpatialReference(epsg_code)
 );
