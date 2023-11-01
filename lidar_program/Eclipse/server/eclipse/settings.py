@@ -81,8 +81,12 @@ WSGI_APPLICATION = 'eclipse.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        'NAME': 'eclipse',  # database name
+        'USER': 'postgres',  # database user
+        'PASSWORD': 'postgres',  # database password
+        'HOST': 'localhost',  # database host, leave as localhost if the database is on the same machine
+        'PORT': '',  # database port, leave blank to use the default port
     }
 }
 
