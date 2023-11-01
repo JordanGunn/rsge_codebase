@@ -1,7 +1,7 @@
 from rest_framework import serializers
-from .models import NASbox
+from .models import NASBox
 
 class NASboxSerializer(serializers.ModelSerializer):
     class Meta:
-        model = NASbox
+        model = NASBox
         fields = '__all__'

@@ -5,7 +5,7 @@ from django.contrib.gis.db import models
 class Delivery(models.Model):
 
     delivery_id = models.AutoField(primary_key=True)
-    coverage = models.MultiPolygonField(srid=3153)  # using Albers Conic Projection (CSRS)
+    receiver_name = models.CharField(max_length=255)  # using Albers Conic Projection (CSRS)
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
