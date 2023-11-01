@@ -20,9 +20,9 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
 # eclipse imports
-from lidar_program.Eclipse.server.Drive import DriveViewSet
-from lidar_program.Eclipse.server.NASBox.views import NASboxViewSet
-from lidar_program.Eclipse.server.Delivery import DeliveryViewSet
+from Drive.views import DriveViewSet
+from NASBox.views import NASboxViewSet
+from Delivery.views import DeliveryViewSet
 
 # router registration for endpoints
 router = DefaultRouter()
