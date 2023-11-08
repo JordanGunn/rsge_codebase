@@ -3,7 +3,7 @@ from django.contrib.gis.db import models
 
 class NASBox(models.Model):
 
-    nas_id = models.AutoField(primary_key=True)
+    id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=20)
     location = models.CharField(max_length=255)
     ipv4_addr = models.CharField(max_length=15)

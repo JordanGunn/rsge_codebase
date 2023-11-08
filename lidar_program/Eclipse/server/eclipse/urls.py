@@ -33,5 +33,3 @@ router.register(r'delivery', DeliveryViewSet)
 urlpatterns = [
     path('api/', include(router.urls)),
 ]
-
-print()

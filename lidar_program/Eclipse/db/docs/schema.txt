@@ -1,0 +1,485 @@
+
+openapi: 3.0.2
+info:
+  title: ''
+  version: ''
+paths:
+  /api/drive/:
+    get:
+      operationId: listDrives
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Drive'
+          description: ''
+      tags:
+      - api
+    post:
+      operationId: createDrive
+      description: ''
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Drive'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Drive'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Drive'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Drive'
+          description: ''
+      tags:
+      - api
+  /api/drive/{drive_id}/:
+    get:
+      operationId: retrieveDrive
+      description: ''
+      parameters:
+      - name: drive_id
+        in: path
+        required: true
+        description: A unique integer value identifying this drive.
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Drive'
+          description: ''
+      tags:
+      - api
+    put:
+      operationId: updateDrive
+      description: ''
+      parameters:
+      - name: drive_id
+        in: path
+        required: true
+        description: A unique integer value identifying this drive.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Drive'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Drive'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Drive'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Drive'
+          description: ''
+      tags:
+      - api
+    patch:
+      operationId: partialUpdateDrive
+      description: ''
+      parameters:
+      - name: drive_id
+        in: path
+        required: true
+        description: A unique integer value identifying this drive.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Drive'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Drive'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Drive'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Drive'
+          description: ''
+      tags:
+      - api
+    delete:
+      operationId: destroyDrive
+      description: ''
+      parameters:
+      - name: drive_id
+        in: path
+        required: true
+        description: A unique integer value identifying this drive.
+        schema:
+          type: string
+      responses:
+        '204':
+          description: ''
+      tags:
+      - api
+  /api/nasbox/:
+    get:
+      operationId: listNASBoxs
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/NASbox'
+          description: ''
+      tags:
+      - api
+    post:
+      operationId: createNASBox
+      description: ''
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NASbox'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/NASbox'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/NASbox'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NASbox'
+          description: ''
+      tags:
+      - api
+  /api/nasbox/{nas_id}/:
+    get:
+      operationId: retrieveNASBox
+      description: ''
+      parameters:
+      - name: nas_id
+        in: path
+        required: true
+        description: A unique integer value identifying this nas box.
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NASbox'
+          description: ''
+      tags:
+      - api
+    put:
+      operationId: updateNASBox
+      description: ''
+      parameters:
+      - name: nas_id
+        in: path
+        required: true
+        description: A unique integer value identifying this nas box.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NASbox'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/NASbox'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/NASbox'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NASbox'
+          description: ''
+      tags:
+      - api
+    patch:
+      operationId: partialUpdateNASBox
+      description: ''
+      parameters:
+      - name: nas_id
+        in: path
+        required: true
+        description: A unique integer value identifying this nas box.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NASbox'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/NASbox'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/NASbox'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NASbox'
+          description: ''
+      tags:
+      - api
+    delete:
+      operationId: destroyNASBox
+      description: ''
+      parameters:
+      - name: nas_id
+        in: path
+        required: true
+        description: A unique integer value identifying this nas box.
+        schema:
+          type: string
+      responses:
+        '204':
+          description: ''
+      tags:
+      - api
+  /api/delivery/:
+    get:
+      operationId: listDeliverys
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Delivery'
+          description: ''
+      tags:
+      - api
+    post:
+      operationId: createDelivery
+      description: ''
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Delivery'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Delivery'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Delivery'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Delivery'
+          description: ''
+      tags:
+      - api
+  /api/delivery/{delivery_id}/:
+    get:
+      operationId: retrieveDelivery
+      description: ''
+      parameters:
+      - name: delivery_id
+        in: path
+        required: true
+        description: A unique integer value identifying this delivery.
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Delivery'
+          description: ''
+      tags:
+      - api
+    put:
+      operationId: updateDelivery
+      description: ''
+      parameters:
+      - name: delivery_id
+        in: path
+        required: true
+        description: A unique integer value identifying this delivery.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Delivery'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Delivery'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Delivery'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Delivery'
+          description: ''
+      tags:
+      - api
+    patch:
+      operationId: partialUpdateDelivery
+      description: ''
+      parameters:
+      - name: delivery_id
+        in: path
+        required: true
+        description: A unique integer value identifying this delivery.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Delivery'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Delivery'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Delivery'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Delivery'
+          description: ''
+      tags:
+      - api
+    delete:
+      operationId: destroyDelivery
+      description: ''
+      parameters:
+      - name: delivery_id
+        in: path
+        required: true
+        description: A unique integer value identifying this delivery.
+        schema:
+          type: string
+      responses:
+        '204':
+          description: ''
+      tags:
+      - api
+components:
+  schemas:
+    Drive:
+      type: object
+      properties:
+        drive_id:
+          type: integer
+          readOnly: true
+        serial_number:
+          type: string
+          maxLength: 255
+        storage_total_gb:
+          type: string
+          format: decimal
+          multipleOf: 0.01
+          maximum: 100
+          minimum: -100
+        storage_used_gb:
+          type: string
+          format: decimal
+          multipleOf: 0.01
+          maximum: 100
+          minimum: -100
+        file_count:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+          nullable: true
+        nas:
+          type: integer
+          nullable: true
+        delivery:
+          type: integer
+          nullable: true
+      required:
+      - serial_number
+      - storage_total_gb
+      - storage_used_gb
+    NASbox:
+      type: object
+      properties:
+        nas_id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 20
+        location:
+          type: string
+          maxLength: 255
+        ipv4_addr:
+          type: string
+          maxLength: 15
+      required:
+      - name
+      - location
+      - ipv4_addr
+    Delivery:
+      type: object
+      properties:
+        delivery_id:
+          type: integer
+          readOnly: true
+        receiver_name:
+          type: string
+          nullable: true
+          maxLength: 255
+        timestamp:
+          type: string
+          format: date-time
+          nullable: true
+        nas:
+          type: integer
+          nullable: true

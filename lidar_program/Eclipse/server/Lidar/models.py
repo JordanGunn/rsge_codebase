@@ -4,7 +4,7 @@ from django.db import models
 # Create your models here.
 class Lidar(models.Model):
 
-    lidar_id = models.AutoField(primary_key=True)
+    id = models.AutoField(primary_key=True)
     file_name = models.CharField(max_length=255, blank=True, null=True)
     file_path = models.CharField(max_length=255, blank=True, null=True)
     file_size = models.CharField(max_length=255, blank=True, null=True)
