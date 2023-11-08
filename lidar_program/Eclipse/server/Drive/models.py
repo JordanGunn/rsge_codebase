@@ -4,7 +4,7 @@ from django.db import models
 
 class Drive(models.Model):
 
-    drive_id = models.AutoField(primary_key=True)
+    id = models.AutoField(primary_key=True)
     serial_number = models.CharField(max_length=255)
     storage_total_gb = models.DecimalField(max_digits=4, decimal_places=2)
     storage_used_gb = models.DecimalField(max_digits=4, decimal_places=2)

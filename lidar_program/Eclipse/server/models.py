@@ -30,6 +30,7 @@ class Bcgs2500K(models.Model):
 
 
 class Controlpoint(models.Model):
+
     point_name = models.CharField(max_length=255, blank=True, null=True)
     point_geometry = models.TextField(blank=True, null=True)  # This field type is a guess.
     delivery = models.ForeignKey('Delivery', models.DO_NOTHING, blank=True, null=True)
@@ -41,6 +42,7 @@ class Controlpoint(models.Model):
 
 
 class Delivery(models.Model):  # DONE
+
     receiver_name = models.CharField(max_length=255, blank=True, null=True)
     timestamp = models.DateTimeField(blank=True, null=True)
     nas = models.ForeignKey('Nasbox', models.DO_NOTHING, blank=True, null=True)
