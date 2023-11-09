@@ -30,13 +30,14 @@ CREATE TABLE IF NOT EXISTS NASBox (
   id SERIAL PRIMARY KEY,
   name VARCHAR(20) NOT NULL,
   location VARCHAR(255) NOT NULL,
+  capacity_gb NUMERIC(4, 2) NOT NULL,
   IPv4_addr VARCHAR(15) NOT NULL
 );
 
 -- Create SpatialReference table with epsg_code as primary key
 CREATE TABLE IF NOT EXISTS SpatialReference (
   epsg_code INTEGER PRIMARY KEY,
-  sr_name VARCHAR(255) NOT NULL,
+  proj_name VARCHAR(255) NOT NULL,
   description TEXT
 );
 
@@ -58,8 +59,7 @@ CREATE TABLE IF NOT EXISTS UTMZone (
 CREATE TABLE IF NOT EXISTS Delivery (
   id SERIAL PRIMARY KEY,
   receiver_name VARCHAR(255),
-  timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  nas_id INTEGER REFERENCES NASBox(id)
+  timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Create the LidarFile table
@@ -72,10 +72,9 @@ CREATE TABLE IF NOT EXISTS Lidar (
   x_max NUMERIC(10, 3),
   y_min NUMERIC(10, 3),
   y_max NUMERIC(10, 3),
-  point_record_format INTEGER,
-  epsg_code INTEGER,
-  version REAL,
   lidar_type CHAR,
+  version REAL,
+  epsg_code INTEGER REFERENCES SpatialReference(epsg_code),
   nas_id INTEGER REFERENCES NASBox(id),
   delivery_id INTEGER REFERENCES Delivery(id)
 );
@@ -87,17 +86,18 @@ CREATE TABLE IF NOT EXISTS LidarClassified (
   bounding_box POLYGON
 );
 
--- Create the LidarClassified table
--- -- tile_2500k reference added in 'eclipse_insertion.sql' script
+-- Create the LidarRaw table
 CREATE TABLE IF NOT EXISTS LidarRaw (
   id SERIAL PRIMARY KEY REFERENCES Lidar(id),
   convex_hull POLYGON,
   file_source_id INTEGER
 );
 
--- Create the LidarFile table
+-- Create the DerivedProduct table
+-- -- tile_20k reference added in 'eclipse_insertion.sql' script
 CREATE TABLE IF NOT EXISTS DerivedProduct (
   id SERIAL PRIMARY KEY,
+  derived_product_type DERIVED_PRODUCT,
   file_name VARCHAR(255),
   file_path VARCHAR(255),
   file_size VARCHAR(255),
@@ -106,8 +106,7 @@ CREATE TABLE IF NOT EXISTS DerivedProduct (
   y_min NUMERIC(10, 3),
   y_max NUMERIC(10, 3),
   bounding_box POLYGON,
-  epsg_code INTEGER,
-  derived_product DERIVED_PRODUCT,
+  epsg_code INTEGER REFERENCES SpatialReference(epsg_code),
   nas_id INTEGER REFERENCES NASBox(id)
 );
 
@@ -126,17 +125,17 @@ CREATE TABLE IF NOT EXISTS Drive (
 CREATE TABLE IF NOT EXISTS ProcessingStatus (
   id SERIAL PRIMARY KEY,
   status PROCESSING_STATUS,
-  updated_by VARCHAR(255), -- !
-  comments VARCHAR(255), -- !
   timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  processed_by VARCHAR(255), -- !
+  comments VARCHAR(255), -- !
   lidar_id INTEGER REFERENCES Lidar(id)
 );
 
 -- Create the ControlPoint table
-CREATE TABLE IF NOT EXISTS ControlPoint (
-  id SERIAL PRIMARY KEY,
-  point_name VARCHAR(255),
-  point_geometry POINT,
-  delivery_id INTEGER REFERENCES Delivery(id),
-  epsg_code INTEGER REFERENCES SpatialReference(epsg_code)
-);
+--CREATE TABLE IF NOT EXISTS ControlPoint (
+--  id SERIAL PRIMARY KEY,
+--  point_name VARCHAR(255),
+--  point_geometry POINT,
+--  delivery_id INTEGER REFERENCES Delivery(id),
+--  epsg_code INTEGER REFERENCES SpatialReference(epsg_code)
+--);

@@ -5,6 +5,7 @@ REM Load your config and environment variables
 call db-config.bat
 call db-env.bat
 
+set PATH_SQL_SCRIPTS=..\..
 set SCRIPT_PURGE=%PATH_SQL_SCRIPTS%\eclipse_purge.sql
 
 REM Run the SQL script
