@@ -6,6 +6,7 @@ class NASBox(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=20)
     location = models.CharField(max_length=255)
+    capacity_gb = models.DecimalField(max_digits=4, decimal_places=2)
     ipv4_addr = models.CharField(max_length=15)
 
     def __str__(self):

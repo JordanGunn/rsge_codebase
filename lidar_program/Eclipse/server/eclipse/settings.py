@@ -10,7 +10,12 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
+import os
 from pathlib import Path
+
+if os.name == 'nt':
+    os.environ['PATH'] = os.path.join('D:\\Archive\\work\\GeoBC_venv\\Lib\\site-packages\\osgeo') + ';' + os.environ['PATH']
+    os.environ['PROJ_LIB'] = os.path.join('D:\\Archive\\work\\GeoBC_venv\\Lib\\site-packages\\osgeo\\data\\proj') + ';' + os.environ['PATH']
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -42,7 +47,18 @@ INSTALLED_APPS = [
     'rest_framework_gis',
     'Delivery',
     'NASBox',
-    'Drive'
+    'Drive',
+    'Lidar',
+    'ProcessingStatus',
+    'LidarRaw',
+    'LidarClassified',
+    'BCGS2500k',
+    'BCGS20k',
+    'SpatialReference',
+    'UTMZone',
+    'Epoch',
+    'DerivedProduct'
+    
 ]
 
 MIDDLEWARE = [
